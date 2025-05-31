@@ -1,6 +1,19 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { Link, NavLink } from 'react-router';
+import { AuthContext } from '../Utilities/AuthProvider/AuthContext';
 
 const Navbar = () => {
+  
+  const {user,logOut}=useContext(AuthContext);
+  const [isHover,setisHover]= useState(false);
+
+  const links = <ul className='space-x-4'>
+  <NavLink to={'/'}>Home</NavLink>
+  <NavLink to={'/myApplication'}>My Application </NavLink>
+  <NavLink to={'/addJobs'}>Add Jobs</NavLink>
+  <NavLink to={'/myPosted'}>My posted Job</NavLink>
+  
+  </ul>
     return (
         <div className="navbar bg-base-100 shadow-sm">
   <div className="navbar-start">
@@ -11,36 +24,40 @@ const Navbar = () => {
       <ul
         tabIndex={0}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li><a>Item 1</a></li>
-        <li>
-          <a>Parent</a>
-          <ul className="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </li>
-        <li><a>Item 3</a></li>
+       {links}
       </ul>
     </div>
-    <a className="btn btn-ghost text-xl">daisyUI</a>
+    <a className="btn btn-ghost text-xl">Job Portal</a>
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
-      <li><a>Item 1</a></li>
-      <li>
-        <details>
-          <summary>Parent</summary>
-          <ul className="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </details>
-      </li>
-      <li><a>Item 3</a></li>
+          {links}
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Button</a>
+    {
+    user? <div className='relative' onMouseEnter={()=> setisHover(true)}
+     onMouseLeave={()=>setisHover(false)}
+    > 
+  <img className='w-12 h-12 rounded-full' src={user?.photoUrl} alt="" />
+
+   {
+     isHover&& <div className='bg-gray-300 p-3 rounded-md -ml-22 absolute '>
+        <p>{user?.displayName}</p>
+      
+        <button className='hover:bg-red-500 hover:text-white hover:scale-3d btn rounded-full' onClick={()=> logOut()}>signOut</button>
+      </div>
+   }
+     </div>
+  
+      :<div>
+        <Link to={'/login'}><button className='btn bg-red-500 rounded-full text-white'>login</button></Link>
+        <Link  to={'/register'}><button className='btn bg-red-500 rounded-full text-white'>register</button></Link>
+      </div>
+    }
+ 
+
+  
   </div>
 </div>
     );
